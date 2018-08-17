@@ -1,0 +1,41 @@
+{
+  "name": "wsapoc",
+  "version": "1.0.0",
+  "description": "POC Comparison Of SSE, Notification API, Push API, and Web Sockets",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "clean-css": "^4.1.9",
+    "connect-busboy": "0.0.2",
+    "connect-redis": "^3.1.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.6.1",
+    "express": "^4.13.4",
+    "express-session": "^1.7.6",
+    "mime": "^2.0.3",
+    "morgan": "^1.9.0",
+    "redis": "^2.6.3",
+    "request": "^2.72.0",
+    "uglify-es": "^3.3.9"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efossas/WebServerAlerts-POC.git"
+  },
+  "keywords": [
+    "push api",
+    "notification api",
+    "server side events",
+    "web sockets"
+  ],
+  "author": "Eric Fossas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/efossas/WebServerAlerts-POC/issues"
+  },
+  "homepage": "https://github.com/efossas/WebServerAlerts-POC#readme"
+}

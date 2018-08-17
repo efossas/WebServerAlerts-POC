@@ -1,0 +1,27 @@
+# logs
+logLevel = "DEBUG"
+
+[traefikLog]
+
+[accessLog]
+  [accessLog.filters]
+    statusCodes = ["0-600"]
+
+# entry points
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+  
+  # traefik web console, password created with: htpasswd -nbB admin default
+  [entryPoints.traefik]
+   address=":8080"
+
+# gui
+[api]
+entrypoint="traefik"
+
+# docker
+[docker]
+watch = true
+exposedbydefault = false
+domain = "docker.localhost"

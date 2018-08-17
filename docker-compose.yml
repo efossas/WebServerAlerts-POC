@@ -1,0 +1,56 @@
+version: '3'
+
+networks:
+  proxy:
+
+volumes:
+  wsapoc-cache-redis:
+
+services:
+  traefik:
+    image: 'traefik:alpine'
+    container_name: 'traefik'
+    expose:
+      - 8080
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik:/etc/traefik
+    labels:
+      - traefik.frontend.entryPoints=https,http
+      - traefik.frontend.rule=Host:traefik.docker.localhost
+      - traefik.port=8080
+      - traefik.enable=true
+    networks:
+      proxy:
+  crud:
+    image: 'efossas/crud'
+    container_name: 'crud'
+    expose:
+      - 80
+      - 443
+    volumes:
+      - ./:/crud
+    labels:
+      - traefik.INSECURE.frontend.entryPoints=https,http
+      - traefik.INSECURE.frontend.rule=Host:web.docker.localhost
+      - traefik.INSECURE.port=80
+      ## traefik does not support ssl between containers
+      #- traefik.SECURE.frontend.rule=Host:crud.docker.localhost
+      #- traefik.SECURE.port=443
+      - traefik.enable=true
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      proxy:
+  redis:
+    image: 'redis:alpine'
+    container_name: 'redis'
+    volumes:
+      - wsapoc-cache-redis:/data
+    labels:
+      - traefik.enable=false
+    networks:
+      proxy:
