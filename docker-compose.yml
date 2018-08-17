@@ -24,14 +24,14 @@ services:
       - traefik.enable=true
     networks:
       proxy:
-  crud:
-    image: 'efossas/crud'
+  wsapoc:
+    image: 'efossas/wsapoc'
     container_name: 'crud'
     expose:
       - 80
       - 443
     volumes:
-      - ./:/crud
+      - ./:/poc
     labels:
       - traefik.INSECURE.frontend.entryPoints=https,http
       - traefik.INSECURE.frontend.rule=Host:web.docker.localhost
