@@ -41,7 +41,6 @@ services:
       #- traefik.SECURE.port=443
       - traefik.enable=true
     depends_on:
-      - mongo
       - redis
     networks:
       proxy:
