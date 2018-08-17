@@ -26,19 +26,16 @@ services:
       proxy:
   wsapoc:
     image: 'efossas/wsapoc'
-    container_name: 'crud'
+    container_name: 'wsapoc'
     expose:
       - 80
       - 443
     volumes:
       - ./:/poc
     labels:
-      - traefik.INSECURE.frontend.entryPoints=https,http
+      - traefik.INSECURE.frontend.entryPoints=http
       - traefik.INSECURE.frontend.rule=Host:web.docker.localhost
       - traefik.INSECURE.port=80
-      ## traefik does not support ssl between containers
-      #- traefik.SECURE.frontend.rule=Host:crud.docker.localhost
-      #- traefik.SECURE.port=443
       - traefik.enable=true
     depends_on:
       - redis
