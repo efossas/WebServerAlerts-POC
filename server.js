@@ -7,18 +7,18 @@ const busboy = require('connect-busboy');
 const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
+const socketio = require('socket.io');
 const session = require('express-session');
 const redis = require("redis");
 const RedisStore = require('connect-redis')(session);
 const fs = require('fs');
 const path = require('path');
+const webPush = require('web-push');
 
 let routes = {};
 routes.landing = require('./routes/landing.js').route;
-routes.notification = require('./routes/notification.js').route;
-routes.push = require('./routes/push.js').route;
 routes.sse = require('./routes/sse.js').route;
-routes.ws = require('./routes/ws.js').route;
+routes.push = require('./routes/push.js').route;
 
 function server() {
   /* get express server object */
@@ -32,10 +32,10 @@ function server() {
   app.use(bodyParser.urlencoded({ extended: true }));
   
   /* enable static assets directory */
-  app.use('/static',express.static(__dirname + '/static'));
+  app.use('/',express.static(__dirname + '/static'));
   
   /* enable morgan for access logs */
-  app.use(morgan('combined'));
+  // app.use(morgan('combined'));
   
   /* enable ejs for templating */
   app.set('view engine', 'ejs');
@@ -63,23 +63,74 @@ function server() {
     process.exit();
   }
   
-  /* grab the configuration file & create routes */
+  /* set data object in app */
+  app.set('data',{});
+  
+  /* set up for Push API */
+  const vapidKeys = webPush.generateVAPIDKeys();
+  process.env.VAPID_PUBLIC_KEY = vapidKeys.publicKey;
+  process.env.VAPID_PRIVATE_KEY = vapidKeys.privateKey;
+  
+  webPush.setVapidDetails(
+    'http://http://web.docker.localhost/',
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+  
+  app.set('subscriptions',{});
+  
+  /* this will send push notifications every 5 seconds */
+  setInterval(() => {
+     Object.values(app.settings['subscriptions']).forEach((subscription) => {
+      webPush.sendNotification(subscription,'Notification Payload').then(() => {}).catch((e) => {
+        //// console.log(e);
+        delete app.settings['subscriptions'][subscription.endpoint];
+      });
+    });
+  }, 5000);
+  
+  /* LANDING */
   
   app.get('/',routes.landing);
-  app.get('/notification',routes.notification);
-  app.get('/push',routes.push);
-  app.get('/sse',routes.sse);
-  app.get('/ws',routes.ws);
+  
+  /* PUSH API */
+  
+  app.post('/push',routes.push);
+  app.get('/pushKey',(request, response) => { response.send(process.env.VAPID_PUBLIC_KEY); });
+  
+  /* SERVER SIDE EVENTS */
+  
+  app.get('/sse',routes.sse); // SSE only supports GET requests
+  
+  /* WEB SOCKETS */
+	
+	const hs = http.createServer(app);
+	const io = socketio(hs);
+	
+	io.on('connection', function(socket) {
+  	// connection
+  	let cnt = 0;
+  	let sId = setInterval(() => {
+    	io.emit('ws event', 'Web Socket Notification ' + (cnt++));
+    }, 5000);
+
+    socket.on('disconnect', function() {
+      // disconnection
+      clearInterval(sId);
+    });
+  });
+  
+  /* catch all and start the server */
   
   app.all('*',function(request,response) {
 		response.status(404);
 		response.end("CRUD Path Not Found");
 	});
 	
-	http.createServer(app).listen(80,function() {
+	hs.listen(80,function() {
 		console.log("CRUD http server listening at 80");
 	});
-  
+
   process.on('SIGINT',function() {
   	// place any clean up here
       process.exit();

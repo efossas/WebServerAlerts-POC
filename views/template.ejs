@@ -3,19 +3,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <link rel="icon" type="image/png" href="/static/img/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    
+    <!-- alertify & font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/alertify.min.css" integrity="sha256-sWU2rI9NwiWVFCJE2roX/WU8vrGKshPV5zoH31X3gmQ=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/themes/bootstrap.min.css" integrity="sha256-SRrWsl8I440Y4yoUicHFwW7SB0irMPnd+9I1okWN7YQ=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/css/themes/default.min.css" integrity="sha256-Q0X1El37P48MtDAJWJhwCDn1N4OH79Erk0fdIVA5bek=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
-    <script src="/static/js/poc.js"></script>
+    <!-- alertify, socketio, & poc.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.11.1/alertify.min.js" integrity="sha256-a5BJQEMVvKJbs38h5W3EFXI4svjVezJnZzK1YFF3Fm0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
+    <script src="/js/poc.js"></script>
     
-    <title>RESTful CRUD</title>
+    <title>POC</title>
   </head>
   <body>
     <div class="row height-20"></div>
     <div class="row">
       <div class="col col-10"></div>
       <div id="poc" class="col col-80">
+        <h1>Proof of Concept (Eric Fossas)</h1>
         <%- html %>
       </div>
       <div class="col col-10"></div>
